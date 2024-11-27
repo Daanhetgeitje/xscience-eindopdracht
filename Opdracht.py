@@ -1,12 +1,27 @@
 
 import re
 import random
+import json
+import urllib.request
+
 
 patterns = {
    "Weet je nog (.*)":"Natuurlijk weet ik nog {}.",
    "Ik voel me (.*)":"Waarom voel jij je {}?",
    
 }
+
+def get_cat_fact():
+  url = 'https://meowfacts.herokuapp.com/'
+  response = urllib.request.urlopen(url)
+  result = json.loads(response.read())
+
+  single_cat = result["data"]
+  single_cat = single_cat[0]
+
+  return single_cat
+
+  print(result)
 
 responses = {
   "Hallo": ["Hoi, hoe gaat het?", "Hallo!"],
@@ -25,19 +40,11 @@ responses = {
   "hoelang duurt het om een vlucht te boeken":["Een vlucht boeken duurt tussen de 2-3 minuten"],
   "Hoelang duurt het om een vlucht te boeken?":["Een vlucht boeken duurt tussen de 2-3 minuten"],
   "hoelang duurt het om een vlucht te boeken?":["Een vlucht boeken duurt tussen de 2-3 minuten"],
-  "Wat is het weer in Aruba?":[get_cat_fact()]
+  "noem een kattenfeitje": [get_cat_fact()]
 }
 
-def get_cat_fact():
-  url = 'https://meowfacts.herokuapp.com/'
-  response = urllib.request.urlopen(url)
-  result = json.loads(response.read())
-
-  print(result)
 
 def get_response(message):
-
-
   for pattern in patterns:
     match = re.search(pattern, message)
     if match:
@@ -51,5 +58,5 @@ def get_response(message):
 while True:
   message = input("YOU: ")
   response = get_response(message)
-  print("Bot: " + response)- 
+  print("Bot: " + response) 
   
